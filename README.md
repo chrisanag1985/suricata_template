@@ -1,2 +1,2 @@
 # suricata_template
-Zabbix Template for Suricata Sensor (uses suricasc)
+Zabbix Template for Suricata Sensor (uses suricatasc)
