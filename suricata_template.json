@@ -1,0 +1,181 @@
+{
+    "zabbix_export": {
+        "version": "6.0",
+        "date": "2024-03-06T09:27:16Z",
+        "groups": [
+            {
+                "uuid": "cbaa9d26de854172bca755d57d7716f2",
+                "name": "Suricata"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "d16423447d384dbc9f5c8b33bc943f3b",
+                "template": "Suricata-Template",
+                "name": "Suricata-Template",
+                "description": "Suricata Telemetry through userparameters (suricatasc)",
+                "groups": [
+                    {
+                        "name": "Suricata"
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "c753b79e24894618bde0996b302429c7",
+                        "name": "Suricata Interface Discovery",
+                        "key": "suricata.iface-list",
+                        "delay": "1d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "6ae8d13f07774c7d912c6f0a7530b3dd",
+                                "name": "Suricata Interface {#INTERFACE} Bypassed Packets",
+                                "type": "DEPENDENT",
+                                "key": "suricata.bypass[{#INTERFACE}]",
+                                "delay": "0",
+                                "units": "packets",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.message.bypassed"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "suricata.stats[{#INTERFACE}]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Suricata"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "5d02c12d33f3463daac0bea3f5358876",
+                                "name": "Suricata Interface {#INTERFACE} Dropped Packets",
+                                "type": "DEPENDENT",
+                                "key": "suricata.drop[{#INTERFACE}]",
+                                "delay": "0",
+                                "units": "packets",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.message.drop"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "suricata.stats[{#INTERFACE}]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Suricata"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "7ed0c8d8eca0444db6f017be437cb372",
+                                        "expression": "last(/Suricata-Template/suricata.drop[{#INTERFACE}],#5)>0",
+                                        "name": "Suricata Dropped Packets",
+                                        "priority": "AVERAGE",
+                                        "manual_close": "YES",
+                                        "tags": [
+                                            {
+                                                "tag": "Application",
+                                                "value": "Suricata"
+                                            },
+                                            {
+                                                "tag": "scope",
+                                                "value": "performance"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "524d0f988aa749208ef11a1a926cd166",
+                                "name": "Suricata Interface {#INTERFACE} Processed Packets",
+                                "type": "DEPENDENT",
+                                "key": "suricata.packets[{#INTERFACE}]",
+                                "delay": "0",
+                                "units": "packets",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.message.pkts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "suricata.stats[{#INTERFACE}]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Suricata"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "adba877fe96245a0a4d942b17609bb24",
+                                "name": "Suricata Interface {#INTERFACE} Stats",
+                                "key": "suricata.stats[{#INTERFACE}]",
+                                "delay": "60s",
+                                "history": "0",
+                                "trends": "0",
+                                "value_type": "TEXT",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Suricata"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "ed6d55a1309041fea14a87e59379edfe",
+                                        "expression": "nodata(/Suricata-Template/suricata.stats[{#INTERFACE}],2)=1",
+                                        "name": "Suricata Connection Problem",
+                                        "priority": "HIGH",
+                                        "manual_close": "YES",
+                                        "tags": [
+                                            {
+                                                "tag": "Application",
+                                                "value": "Suricata"
+                                            },
+                                            {
+                                                "tag": "scope",
+                                                "value": "availability"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
